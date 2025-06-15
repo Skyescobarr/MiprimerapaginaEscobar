@@ -1,4 +1,4 @@
-# Mi Blog Django (TuPrimeraPagina+Apellido)
+# Mi Blog Django (MiPrimeraPaginaEscobar)
 
 Hola que tal? Este es un proyecto de blog desarrollado con Django, siguiendo el patrón MVT.
 
@@ -25,9 +25,8 @@ Hola que tal? Este es un proyecto de blog desarrollado con Django, siguiendo el 
 
 3.  **Instalar dependencias:**
     ```bash
-    pip install Django # O pip install -r requirements.txt si creaste uno
+    pip install Django 
     ```
-    (Si no tienes un `requirements.txt`, sería buena idea crearlo con `pip freeze > requirements.txt` y subirlo al repo).
 
 4.  **Aplicar migraciones:**
     ```bash
@@ -38,9 +37,10 @@ Hola que tal? Este es un proyecto de blog desarrollado con Django, siguiendo el 
     ```bash
     python manage.py createsuperuser
     ```
-    Sigue las instrucciones para crear usuario y contraseña.
+    User: Sky
+    Pass: --------
 
-6.  **Iniciar el servidor de desarrollo:**
+7.  **Iniciar el servidor de desarrollo:**
     ```bash
     python manage.py runserver
     ```
