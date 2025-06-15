@@ -1,0 +1,44 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ post.title }}{% endblock %}
+
+{% block content %}
+    <h2 class="post-title">{{ post.title }}</h2>
+    <p class="post-meta">Publicado el {{ post.created_date|date:"d M Y" }} por {{ post.author.username }}</p>
+    <p class="post-meta">Categoría: {% if post.category %}{{ post.category.name }}{% else %}Sin categoría{% endif %}</p>
+    <div class="post-content">
+        {{ post.content|linebreaksbr }}
+    </div>
+
+    <div class="comment-section">
+        <h3>Comentarios ({{ comments.count }})</h3>
+        {% for comment in comments %}
+            <div class="comment">
+                <p><strong>{{ comment.author_name }}</strong> el {{ comment.created_date|date:"d M Y H:i" }}</p>
+                <p>{{ comment.text|linebreaksbr }}</p>
+            </div>
+        {% empty %}
+            <p>No hay comentarios aún.</p>
+        {% endfor %}
+
+        <h3>Deja un comentario</h3>
+        <form method="POST" class="post-form">{% csrf_token %}
+            <div class="form-group">
+                <label for="{{ comment_form.author_name.id_for_label }}">Tu Nombre:</label>
+                {{ comment_form.author_name }}
+                {% if comment_form.author_name.errors %}<ul class="errorlist">{% for error in comment_form.author_name.errors %}<li>{{ error }}</li>{% endfor %}</ul>{% endif %}
+            </div>
+            <div class="form-group">
+                <label for="{{ comment_form.email.id_for_label }}">Tu Email (opcional):</label>
+                {{ comment_form.email }}
+                {% if comment_form.email.errors %}<ul class="errorlist">{% for error in comment_form.email.errors %}<li>{{ error }}</li>{% endfor %}</ul>{% endif %}
+            </div>
+            <div class="form-group">
+                <label for="{{ comment_form.text.id_for_label }}">Comentario:</label>
+                {{ comment_form.text }}
+                {% if comment_form.text.errors %}<ul class="errorlist">{% for error in comment_form.text.errors %}<li>{{ error }}</li>{% endfor %}</ul>{% endif %}
+            </div>
+            <button type="submit" class="btn">Enviar Comentario</button>
+        </form>
+    </div>
+{% endblock %}
