@@ -1,6 +1,6 @@
 # Mi Blog Django (TuPrimeraPagina+Apellido)
 
-Hola que tal? Este es un proyecto de blog desarrollado con Django, siguiendo el patrón MVT.
+Este proyecto es una aplicación web construida con Django que simula un sistema de gestión de blog. Permite a los usuarios registrarse, iniciar sesión, y a los administradores realizar operaciones CRUD (Crear, Leer, Actualizar, Eliminar) sobre las publicaciones.
 
 ## Requisitos del Sistema
 * Python 3.11
@@ -62,6 +62,31 @@ Hola que tal? Este es un proyecto de blog desarrollado con Django, siguiendo el 
 * `templates/`: Contiene `base.html` y una subcarpeta `pag/` con las plantillas de la aplicación.
 * `db.sqlite3`: Base de datos SQLite (ignorada por Git).
 * `venv/`: Entorno virtual de Python (ignorado por Git).
+
+## Dos aplicaciones
+* core: Maneja las páginas principales como el inicio y "Acerca de"
+* blog: Gestiona modelos de Post y Author y sus respectivas vistas CRUD 
+
+## Modelos 
+*Post: Posee campos de texto(título, contenido), númerico(contador de vistas) y fechas (fecha de publicación)
+*Author: Posee campos de texto
+
+# Vistas Basadas en Clases(CBV) 
+* ListasView para listar publicaciones 
+* DetailView para ver el detalle de la publicacion
+* CreateView para crear nuevas publicaciones
+* DeleteView para eliminar publicaciones
+
+# Autenticación de usuarios
+*Registro de nuevos usuarios
+*Inicio de sesión de usuarios existentes
+
+# Funcionalidad de Administrador: 
+* Los usuarios superadministradores (is_superuser o is_staff)pueden realizar operaciones CRUD en las publicaciones a través del panel de admin y las vistas frontend
+
+# Navegación Intuitiva 
+* Redirección de la ruta base (/) a la página de inicio (/home/)
+* Navegación entre las diferentes secciones de la aplicación utilizando enlaces en la interfaz de usuario, sin necesidad de manipular la barra de direcciones.
 
 ---
 Desarrollado por Skylix Escobar

@@ -16,8 +16,18 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
+from django.views.generic.base import RedirectView
+from django.contrib.auth import views as auth_views
+from core.views import register 
+
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', include('pag.urls')),
-]
+    path('', RedirectView.as_view(url='/home/', permanent=True)),  # Redirect root to pag app
+    path('home/', include('core.urls')),
+    path('pag/', include('pag.urls')), 
+
+    path('accounts/login/', auth_views.LoginView.as_view(template_name='registration/login.html'), name='login'),
+    path('accounts/logout/', auth_views.LogoutView.as_view(template_name='registration/logged_out.html'), name='logout'),
+    path('accounts/register/', register, name='register'),
+] 

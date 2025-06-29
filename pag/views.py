@@ -1,58 +1,136 @@
-# blog/views.py
+# tu_app_nombre/views.py
+
 from django.shortcuts import render, redirect, get_object_or_404
-from .models import Post, Category, Comment 
-from .forms import PostForm, CategoryForm, CommentForm, PostSearchForm
-from django.db.models import Q
+from django.contrib import messages
+from django.contrib.auth.decorators import login_required
+# Si aún usas UserCreationForm para registrar usuarios:
+from django.contrib.auth.forms import UserCreationForm
 
-def post_list(request):
-    posts = Post.objects.all()
-    return render(request, 'pag/post_list.html', {'posts': posts})
 
-def post_detail(request, pk):
-    post = get_object_or_404(Post, pk=pk)
-    comments = post.comments.all() # type: ignore
-    if request.method == "POST":
-        form = CommentForm(request.POST)
+# ¡Importa tus modelos y formularios actualizados!
+from .models import Course, Instructor # Asegúrate de que estos son los nombres de tus modelos
+from .forms import CourseForm, CourseSearchForm # Importa solo los formularios que usarás
+
+
+# --- Vistas Generales ---
+def home_view(request):
+    """
+    Vista para la página de inicio.
+    Renderiza el template home.html.
+    """
+    return render(request, 'home.html') # Asegúrate de que 'home.html' está en la carpeta 'templates' de tu app o proyecto
+
+def about_view(request):
+    """
+    Vista para la página 'Quiénes Somos'.
+    """
+    return render(request, 'about.html')
+
+def contact_view(request):
+    """
+    Vista para la página de contacto.
+    (Aquí podrías añadir lógica para un formulario de contacto si lo deseas).
+    """
+    return render(request, 'contact.html')
+
+# --- Vistas de Cursos ---
+def course_list_view(request): # Renombrado de post_list_view
+    """
+    Vista para listar todos los cursos y permitir búsquedas.
+    """
+    courses = Course.objects.all().order_by('-published_date') # Obtiene todos los cursos ordenados
+
+    search_form = CourseSearchForm(request.GET) # Instancia el formulario de búsqueda con los datos de GET
+    if search_form.is_valid():
+        query = search_form.cleaned_data.get('query')
+        if query:
+            # Filtra los cursos cuyo título contenga la 'query' (insensible a mayúsculas/minúsculas)
+            courses = courses.filter(title__icontains=query)
+
+    return render(request, 'course_list.html', {
+        'courses': courses,
+        'search_form': search_form
+    })
+
+@login_required # Solo usuarios autenticados pueden crear cursos
+def course_create_view(request): # Renombrado de post_create_view
+    """
+    Vista para crear un nuevo curso.
+    """
+    if request.method == 'POST':
+        form = CourseForm(request.POST)
         if form.is_valid():
-            comment = form.save(commit=False)
-            comment.post = post
-            comment.save()
-            return redirect('post_detail', pk=post.pk)
+            # El campo 'instructor' se maneja directamente por el formulario ModelForm.
+            # No necesitas asignar el 'author' si tu modelo Course no tiene ese campo.
+            form.save()
+            messages.success(request, '¡Curso creado con éxito!')
+            return redirect('course_list') # Redirige a la lista de cursos
     else:
-        form = CommentForm()
-    return render(request, 'pag/post_detail.html', {'post': post, 'comments': comments, 'comment_form': form})
+        form = CourseForm()
+    return render(request, 'course_form.html', {'form': form}) # Usar un template más genérico para formularios
 
-def new_post(request):
-    if request.method == "POST":
-        form = PostForm(request.POST)
+def course_detail_view(request, pk):
+    """
+    Vista para mostrar los detalles de un curso específico.
+    """
+    course = get_object_or_404(Course, pk=pk)
+    return render(request, 'course_detail.html', {'course': course})
+
+# --- Vistas de Autenticación (si son personalizadas) ---
+def register_view(request):
+    """
+    Vista para el registro de nuevos usuarios.
+    """
+    if request.method == 'POST':
+        form = UserCreationForm(request.POST)
         if form.is_valid():
-            post = form.save(commit=False)
-            # Si quieres que el autor sea el usuario logueado, descomenta la siguiente línea:
-            # post.author = request.user
-            post.save()
-            return redirect('post_detail', pk=post.pk)
+            form.save()
+            username = form.cleaned_data.get('username')
+            messages.success(request, f'¡Cuenta creada para {username}! Ahora puedes iniciar sesión.')
+            return redirect('login')
     else:
-        form = PostForm()
-    return render(request, 'pag/post_form.html', {'form': form, 'form_title': 'Crear Nuevo Post'})
+        form = UserCreationForm()
+    return render(request, 'registration/register.html', {'form': form})
 
-def new_category(request):
-    if request.method == "POST":
-        form = CategoryForm(request.POST)
+def course_update_view(request, pk):
+    """
+    Vista para actualizar un curso existente.
+    """
+    course = get_object_or_404(Course, pk=pk)
+
+    # Opcional: Asegúrate de que solo el instructor del curso (o staff/superusuario) puede editar
+    # if not is_instructor_or_staff(request.user) and request.user != course.instructor.user:
+    #     messages.error(request, 'No tienes permiso para editar este curso.')
+    #     return redirect('course_detail', pk=pk)
+
+    if request.method == 'POST':
+        form = CourseForm(request.POST, instance=course) # Pasa la instancia del curso
         if form.is_valid():
-            category = form.save()
-            return redirect('post_list')
+            form.save()
+            messages.success(request, '¡Curso actualizado con éxito!')
+            return redirect('course_detail', pk=course.pk) # Redirige al detalle del curso
     else:
-        form = CategoryForm()
-    return render(request, 'pag/category_form.html', {'form': form, 'form_title': 'Crear Nueva Categoría'})
+        form = CourseForm(instance=course) # Pasa la instancia para pre-llenar el formulario
+    return render(request, 'course_form.html', {'form': form, 'course': course})
+def course_delete_view(request, pk):
+    """
+    Vista para eliminar un curso existente.
+    """
+    course = get_object_or_404(Course, pk=pk)
 
-def post_search(request):
-    form = PostSearchForm()
-    results = []
-    query = None
-    if 'query' in request.GET:
-        form = PostSearchForm(request.GET)
-        if form.is_valid():
-            query = form.cleaned_data['query']
-            results = Post.objects.filter(Q(title__icontains=query) | Q(content__icontains=query)).distinct()
-    return render(request, 'pag/search_results.html', {'form': form, 'results': results, 'query': query})
+    # Opcional: Asegúrate de que solo el instructor del curso (o staff/superusuario) puede eliminar
+    # if not is_instructor_or_staff(request.user) and request.user != course.instructor.user:
+    #     messages.error(request, 'No tienes permiso para eliminar este curso.')
+    #     return redirect('course_detail', pk=pk)
 
+    if request.method == 'POST':
+        course.delete()
+        messages.success(request, '¡Curso eliminado con éxito!')
+        return redirect('course_list') # Redirige a la lista de cursos después de eliminar
+    return render(request, 'course_confirm_delete.html', {'course': course}) # Pide confirmación al usuario
+
+# Si tienes Category y Comment, y sus vistas asociadas, deberías renombrarlas también
+# def category_list_view(request): # Eliminar si no tienes modelo Category
+#     # ...
+# def comment_create_view(request, pk): # Eliminar si no tienes modelo Comment
+#     # ...

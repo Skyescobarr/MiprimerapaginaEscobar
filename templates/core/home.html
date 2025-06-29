@@ -1,0 +1,71 @@
+{% extends 'core/base.html' %}
+{% load static %}
+
+{% block title %}Inicio - SkyAI Learning{% endblock %}
+
+{% block content %}
+    <div class="hero-section">
+        <img src="https://i0.wp.com/litci.org/es/wp-content/uploads/2023/07/Imagen-humanoide-de-robots-con-tablet-para-estudiar-ciencias-la-ingenieria-robot-ciencia-usando-inteligencia-artificial-del-cerebro-289947668.webp?w=1476&ssl=1" alt="Banner de Cursos SkyAI">
+        <a href="{% url 'course_list' %}" class="button hero-button">Cursos</a>
+    </div>
+
+    {% if messages %}
+        <ul class="messages">
+            {% for message in messages %}
+                <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+
+    <div class="welcome-message">
+        <h2>Bienvenido a SkyAI Learning</h2>
+        <p>Donde podrás aprender todo lo relacionado con la inteligencia artificial y la programación.</p>
+        <p>Puedes navegar a:</p>
+        <ul>
+            <li><a href="{% url 'course_list' %}">Ver todos los cursos</a></li>
+            <li><a href="{% url 'about' %}">Quienes somos</a></li>
+        
+            {# Si quieres los enlaces de iniciar sesión/registrarse/cerrar sesión aquí, usa esta lógica: #}
+            {% if user.is_authenticated %}
+                <li><a href="{% url 'logout' %}">Cerrar Sesión ({{ user.username }})</a></li>
+            {% else %}
+                <li><a href="{% url 'login' %}">Iniciar Sesión</a></li>
+                <li><a href="{% url 'register' %}">Registrarse</a></li>
+            {% endif %}
+        </ul>
+    </div>
+    <div class="carousel-container">
+        <div class="carousel-slide">
+            <img src="https://images.unsplash.com/photo-1579782500806-039c9f7a7505?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" alt="Machine Learning">
+            <div class="carousel-caption">
+                <h2>Machine Learning</h2>
+            </div>
+        </div>
+        <div class="carousel-slide">
+            <img src="https://images.unsplash.com/photo-1533035338139-e93ff51d11dd?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" alt="Deep Learning">
+            <div class="carousel-caption">
+                <h2>Deep Learning</h2>
+            </div>
+        </div>
+        <div class="carousel-slide">
+            <img src="https://images.unsplash.com/photo-1555212697-eb4a4d29e211?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" alt="Procesamiento del Lenguaje Natural (NLP)">
+            <div class="carousel-caption">
+                <h2>Procesamiento del Lenguaje Natural (NLP)</h2>
+            </div>
+        </div>
+        <div class="carousel-slide">
+            <img src="https://images.unsplash.com/photo-1620712948797-22f3e0984dd8?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" alt="Visión por Computadora">
+            <div class="carousel-caption">
+                <h2>Visión por Computadora</h2>
+            </div>
+        </div>
+        <div class="carousel-slide">
+            <img src="https://images.unsplash.com/photo-1629904853716-f0bc59050d53?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" alt="Ética en IA">
+            <div class="carousel-caption">
+                <h2>Ética en IA</h2>
+            </div>
+        </div>
+        <button class="carousel-prev">&#10094;</button>
+        <button class="carousel-next">&#10095;</button>
+    </div>
+    {% endblock content %} {# ¡ESTO DEBE ESTAR AL FINAL DEL ARCHIVO home.html! #}

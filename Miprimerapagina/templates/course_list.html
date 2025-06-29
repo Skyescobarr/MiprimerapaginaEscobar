@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+{% block title %}Lista de Cursos{% endblock %}
+
+{% block content %}
+    <h1>Nuestros Cursos</h1>
+    <form method="get" action="{% url 'course_list' %}">
+        {{ search_form.as_p }}
+        <button type="submit">Buscar</button>
+    </form>
+
+    <ul>
+        {% for course in courses %}
+            <li>
+                <a href="{% url 'course_detail' pk=course.pk %}">{{ course.title }}</a>
+                - {{ course.instructor }}
+            </li>
+        {% empty %}
+            <li>No hay cursos disponibles.</li>
+        {% endfor %}
+    </ul>
+    <p><a href="{% url 'course_create' %}">Añadir Nuevo Curso</a></p>
+{% endblock %}
