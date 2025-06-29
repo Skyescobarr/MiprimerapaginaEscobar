@@ -23,10 +23,9 @@ from core.views import register
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', RedirectView.as_view(url='/home/', permanent=True)),  # Redirect root to pag app
-    path('home/', include('core.urls')),
+    path('', RedirectView.as_view(url='/home/', permanent=True)),  # Redirect root to home
     path('pag/', include('pag.urls')), 
-    path('about/', include('core.urls')),
+    path('', include('core.urls')),
     path('accounts/login/', auth_views.LoginView.as_view(template_name='registration/login.html'), name='login'),
     path('accounts/logout/', auth_views.LogoutView.as_view(template_name='registration/logout.html', next_page='/'), name='logout'),
     path('accounts/register/', register, name='register'),
