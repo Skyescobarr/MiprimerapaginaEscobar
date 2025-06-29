@@ -82,7 +82,11 @@ Este proyecto es una aplicación web construida con Django que simula un sistema
 *Inicio de sesión de usuarios existentes
 
 # Funcionalidad de Administrador: 
-* Los usuarios superadministradores (is_superuser o is_staff)pueden realizar operaciones CRUD en las publicaciones a través del panel de admin y las vistas frontend
+* Los usuarios superadministradores (is_superuser o is_staff)pueden realizar operaciones CRUD en las publicaciones a través del panel de admin y las vistas frontend.
+
+admin
+user:skyescobarr
+pass: Alix7413
 
 # Navegación Intuitiva 
 * Redirección de la ruta base (/) a la página de inicio (/home/)

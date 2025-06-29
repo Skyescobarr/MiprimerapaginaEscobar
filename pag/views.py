@@ -21,10 +21,9 @@ def home_view(request):
     return render(request, 'home.html') # Asegúrate de que 'home.html' está en la carpeta 'templates' de tu app o proyecto
 
 def about_view(request):
-    """
-    Vista para la página 'Quiénes Somos'.
-    """
-    return render(request, 'about.html')
+    return render(request, 'about.html') , {'titulo': 'Acerca de Nosotros'}
+
+
 
 def contact_view(request):
     """

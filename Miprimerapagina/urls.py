@@ -26,8 +26,8 @@ urlpatterns = [
     path('', RedirectView.as_view(url='/home/', permanent=True)),  # Redirect root to pag app
     path('home/', include('core.urls')),
     path('pag/', include('pag.urls')), 
-
+    path('about/', include('core.urls')),
     path('accounts/login/', auth_views.LoginView.as_view(template_name='registration/login.html'), name='login'),
-    path('accounts/logout/', auth_views.LogoutView.as_view(template_name='registration/logged_out.html'), name='logout'),
+    path('accounts/logout/', auth_views.LogoutView.as_view(template_name='registration/logout.html', next_page='/'), name='logout'),
     path('accounts/register/', register, name='register'),
-] 
+]

@@ -6,7 +6,7 @@ from .views import (
     course_detail_view,
     course_create_view,
     course_update_view,
-    course_delete_view
+    course_delete_view, 
 )
 
   
