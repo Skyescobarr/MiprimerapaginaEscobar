@@ -9,7 +9,7 @@ from django.contrib.auth.forms import UserCreationForm
 
 # ¡Importa tus modelos y formularios actualizados!
 from .models import Course, Instructor # Asegúrate de que estos son los nombres de tus modelos
-from .forms import CourseForm, CourseSearchForm # Importa solo los formularios que usarás
+from .forms import CourseForm, CourseSearchForm, InstructorForm # Importa solo los formularios que usarás
 
 
 # --- Vistas Generales ---
@@ -21,7 +21,7 @@ def home_view(request):
     return render(request, 'home.html') # Asegúrate de que 'home.html' está en la carpeta 'templates' de tu app o proyecto
 
 def about_view(request):
-    return render(request, 'about.html') , {'titulo': 'Acerca de Nosotros'}
+    return render(request, 'about.html', {'titulo': 'Acerca de Nosotros'})
 
 
 
@@ -46,13 +46,13 @@ def course_list_view(request): # Renombrado de post_list_view
             # Filtra los cursos cuyo título contenga la 'query' (insensible a mayúsculas/minúsculas)
             courses = courses.filter(title__icontains=query)
 
-    return render(request, 'course_list.html', {
+    return render(request, 'pag/course_list.html', {
         'courses': courses,
         'search_form': search_form
     })
 
 @login_required # Solo usuarios autenticados pueden crear cursos
-def course_create_view(request): # Renombrado de post_create_view
+def course_create(request): # Renombrado de post_create_view
     """
     Vista para crear un nuevo curso.
     """
@@ -63,17 +63,17 @@ def course_create_view(request): # Renombrado de post_create_view
             # No necesitas asignar el 'author' si tu modelo Course no tiene ese campo.
             form.save()
             messages.success(request, '¡Curso creado con éxito!')
-            return redirect('course_list') # Redirige a la lista de cursos
+            return redirect('pag:course_list') # Redirige a la lista de cursos
     else:
         form = CourseForm()
-    return render(request, 'course_form.html', {'form': form}) # Usar un template más genérico para formularios
+    return render(request, 'pag/course_form.html', {'form': form}) # Usar un template más genérico para formularios
 
 def course_detail_view(request, pk):
     """
     Vista para mostrar los detalles de un curso específico.
     """
     course = get_object_or_404(Course, pk=pk)
-    return render(request, 'course_detail.html', {'course': course})
+    return render(request, 'pag/course_detail.html', {'course': course})
 
 # --- Vistas de Autenticación (si son personalizadas) ---
 def register_view(request):
@@ -107,10 +107,10 @@ def course_update_view(request, pk):
         if form.is_valid():
             form.save()
             messages.success(request, '¡Curso actualizado con éxito!')
-            return redirect('course_detail', pk=course.pk) # Redirige al detalle del curso
+            return redirect('pag:course_detail', pk=course.pk) # Redirige al detalle del curso
     else:
         form = CourseForm(instance=course) # Pasa la instancia para pre-llenar el formulario
-    return render(request, 'course_form.html', {'form': form, 'course': course})
+    return render(request, 'pag/course_form.html', {'form': form, 'course': course})
 def course_delete_view(request, pk):
     """
     Vista para eliminar un curso existente.
@@ -125,11 +125,23 @@ def course_delete_view(request, pk):
     if request.method == 'POST':
         course.delete()
         messages.success(request, '¡Curso eliminado con éxito!')
-        return redirect('course_list') # Redirige a la lista de cursos después de eliminar
-    return render(request, 'course_confirm_delete.html', {'course': course}) # Pide confirmación al usuario
+        return redirect('pag:course_list') # Redirige a la lista de cursos después de eliminar
+    return render(request, 'pag/course_delete.html', {'course': course}) # Pide confirmación al usuario
 
 # Si tienes Category y Comment, y sus vistas asociadas, deberías renombrarlas también
 # def category_list_view(request): # Eliminar si no tienes modelo Category
 #     # ...
 # def comment_create_view(request, pk): # Eliminar si no tienes modelo Comment
 #     # ...
+
+
+def course_edit(request, pk): # <--- Esta es la función que debe existir
+    course = get_object_or_404(Course, pk=pk)
+    if request.method == 'POST':
+        form = CourseForm(request.POST, instance=course)
+        if form.is_valid():
+            form.save()
+            return redirect('pag:course_detail', pk=course.pk)
+    else:
+        form = CourseForm(instance=course)
+    return render(request, 'pag/course_form.html', {'form': form, 'action': 'Editar'})

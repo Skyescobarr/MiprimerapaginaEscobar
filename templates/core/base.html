@@ -312,11 +312,11 @@
         <nav>
             <ul class="main-nav">
                 <li><a href="{% url 'home' %}"><i class="fas fa-home"></i> Inicio</a></li>
-                <li><a href="{% url 'course_list' %}">Cursos</a></li> {# Enlace a lista de cursos #}
+                <li><a href="{% url 'pag:course_list' %}">Cursos</a></li> {# Enlace a lista de cursos #}
                 <li><a href="{% url 'about' %}">Acerca de</a></li> {# Cambiado de Quienes Somos a Acerca de para consistencia con AboutView #}
                 {% if user.is_authenticated %}
                     {% if user.is_staff or user.is_superuser %}
-                        <li><a href="{% url 'course_create' %}">Crear Curso</a></li> {# Enlace a crear curso #}
+                        <li><a href="{% url 'pag:course_create' %}">Crear Curso</a></li> {# Enlace a crear curso #}
                     {% endif %}
                 {% endif %}
             </ul>

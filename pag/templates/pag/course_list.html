@@ -1,0 +1,47 @@
+{% extends 'core/base.html' %}
+{% block title %}Lista de Cursos{% endblock %}
+
+{% block content %}
+    <h1>Cursos Disponibles</h1>
+
+        {# Formulario de Búsqueda #}
+        <form method="get" action="{% url 'pag:course_list' %}">
+            {{ search_form.as_p }} {# Renderiza el campo de búsqueda #}
+            <button type="submit">Buscar</button>
+        </form>
+        <br> {# Espacio entre el buscador y el botón de crear #}
+
+        <a href="{% url 'pag:course_create' %}" class="add-link">Crear Nuevo Curso</a>
+ {% if courses %}
+                <h2>Lista de Cursos</h2>
+            <table>
+                        <thead>
+                                <tr>
+                                        <th>Título</th>
+                                        <th>Instructor</th>
+                                        <th>Publicación</th>
+                                        <th>Estudiantes</th>
+                                        <th>Acciones</th>
+                                </tr>
+                        </thead>
+                        <tbody>
+                                {% for course in courses %}
+                                <tr>
+                                        <td>{{ course.title }}</td>
+                                        <td>{{ course.instructor.name|default:"Sin instructor" }}</td>
+                                        <td>{{ course.published_date|date:"Y-m-d" }}</td>
+                                        <td>{{ course.students_count }}</td>
+                                        <td>
+                                                <a href="{% url 'pag:course_detail' course.pk %}">Ver</a> |
+                                                <a href="{% url 'pag:course_edit' course.pk %}">Editar</a> |
+                                                <a href="{% url 'pag:course_delete' course.pk %}">Eliminar</a>
+                                        </td>
+                                </tr>
+                                {% endfor %}
+                        </tbody>
+                </table>
+        {% else %}
+                <p>No hay cursos registrados aún.</p>
+        {% endif %}
+{% endblock %}
+</html>

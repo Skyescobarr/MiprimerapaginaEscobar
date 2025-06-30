@@ -1,0 +1,33 @@
+{% extends 'core/base.html' %}
+
+{% block title %}{{ course.title }} - SkyAI Learning{% endblock %}
+
+{% block content %}
+<h2>{{ course.title }}</h2>
+<p><strong>Instructor:</strong> {{ course.instructor.name }} ({{ course.instructor.email }})</p> {# Campo actualizado #}
+<p><strong>Fecha de Publicación:</strong> {{ course.published_date|default:"N/A" }}</p>
+<p><strong>Estudiantes:</strong> {{ course.students_count }}</p> {# Campo actualizado #}
+<div class="course-description-content"> {# Clase renombrada para mayor claridad #}
+    {# La descripción del curso se cargará dinámicamente desde la base de datos #}
+    <p>{{ course.description|linebreaksbr }}</p> {# Campo actualizado: description #}
+</div>
+
+<h3>Contenido del Curso:</h3>
+{# Puedes añadir más detalles específicos del contenido del curso aquí si los hubieras en el modelo #}
+{# Por ejemplo, si tuvieras un campo 'syllabus' o 'modules' en el modelo Course #}
+<p>Aquí se detallaría el temario, módulos, lecciones o cualquier otro contenido estructurado del curso.</p>
+<ul>
+    <li>Módulo 1: Introducción a {{ course.title }}</li>
+    <li>Módulo 2: Conceptos Fundamentales</li>
+    <li>Módulo 3: Aplicaciones Prácticas y Casos de Estudio</li>
+    {# Añade más módulos o lecciones según la descripción del curso #}
+</ul>
+
+<p>
+    <a href="{% url 'pag:course_list' %}" class="button">Volver a la lista de Cursos</a> {# Enlace a lista de cursos #}
+    {% if user.is_authenticated and user.is_staff or user.is_authenticated and user.is_superuser %}
+    <a href="{% url 'pag:course_delete' course.pk %}" class="button danger">Eliminar Curso</a> {# Enlace a eliminar
+    curso #}
+    {% endif %}
+</p>
+{% endblock %}

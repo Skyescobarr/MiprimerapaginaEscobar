@@ -10,6 +10,6 @@
         <form method="post">
             {% csrf_token %}
             <button type="submit" class="button danger">Sí, Eliminar</button>
-            <a href="{% url 'course_detail' course.pk %}" class="button">No, Cancelar</a> {# Enlace a detalle de curso #}
+            <a href="{% url 'pag:course_detail' course.pk %}" class="button">No, Cancelar</a> {# Enlace a detalle de curso #}
         </form>
     {% endblock %}

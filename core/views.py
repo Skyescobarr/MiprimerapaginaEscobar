@@ -3,6 +3,7 @@ from django.shortcuts import render, redirect
 from django.contrib.auth.forms import UserCreationForm # Formulario de creación de usuarios de Django
 from django.contrib import messages # Para mostrar mensajes al usuario
 
+
 class HomeView(TemplateView):
     """
     Vista para la página de inicio.

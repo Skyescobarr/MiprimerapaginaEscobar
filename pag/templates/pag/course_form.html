@@ -1,0 +1,19 @@
+{% extends 'core/base.html' %} {# Asegúrate de que extienda tu base.html #}
+
+{% block title %}{{ action }} Curso{% endblock %} {# El 'action' vendrá de la vista (Crear/Editar) #}
+
+{% block content %}
+    <h1>{{ action }} Curso</h1>
+
+    <form method="post">
+        {% csrf_token %} {# MUY IMPORTANTE: Token de seguridad de Django #}
+        {{ form.as_p }} {# Esto renderiza todos los campos del formulario como párrafos #}
+        {# O puedes renderizar los campos individualmente para más control: #}
+        {# <p><label for="{{ form.title.id_for_label }}">Título:</label>{{ form.title }}</p> #}
+        {# {{ form.title.errors }} #}
+
+        <button type="submit">Guardar</button>
+    </form>
+
+    <p><a href="{% url 'pag:course_list' %}">Volver a la lista de cursos</a></p>
+{% endblock %}

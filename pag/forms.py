@@ -9,9 +9,12 @@ from .models import Course, Instructor # Ahora importamos Course e Instructor
 # Formulario para crear o editar un Curso (anteriormente PostForm)
 # ====================================================================
 class CourseForm(forms.ModelForm): # Renombrado de PostForm a CourseForm
-    """
-    Formulario para crear o actualizar instancias del modelo Course.
-    """
+    instructor = forms.ModelChoiceField(
+        queryset=Instructor.objects.all(),
+        empty_label="Selecciona un instructor",
+        widget=forms.Select(attrs={'class': 'form-control'})
+    )
+
     class Meta:
         model = Course # Ahora apunta a tu modelo Course
         # Los campos deben coincidir con los de tu modelo Course
